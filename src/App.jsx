@@ -1,17 +1,43 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import React, { useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-function App() {
-  const [count, setCount] = useState(0)
+import Home from "./components/Home";
+import AddMovie from "./components/Addmovie";
+import MovieDetails from "./components/MovieDetails";
+import movies from "./data";
+
+const App = () => {
+  const [movieList, setMovieList] = useState(() => {
+    const savedMovies = localStorage.getItem("movies");
+
+    return savedMovies ? JSON.parse(savedMovies) : movies;
+  });
 
   return (
-    <>
-    
-    </>
-  )
-}
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={<Home movieList={movieList} />}
+        />
 
-export default App
+        <Route
+          path="/add-movie"
+          element={
+            <AddMovie
+              movieList={movieList}
+              setMovieList={setMovieList}
+            />
+          }
+        />
+
+        <Route
+          path="/movie/:id"
+          element={<MovieDetails movieList={movieList} />}
+        />
+      </Routes>
+    </BrowserRouter>
+  );
+};
+
+export default App;
